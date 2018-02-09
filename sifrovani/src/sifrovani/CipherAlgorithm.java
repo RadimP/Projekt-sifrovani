@@ -22,7 +22,7 @@ public abstract class CipherAlgorithm implements Cipher {
         this.texttocipher = texttocipher;
 
     }
-public abstract void prepareText();
+public abstract String prepareText();
 
 //public abstract void cipherText();
 
