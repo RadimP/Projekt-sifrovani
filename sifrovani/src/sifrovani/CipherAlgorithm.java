@@ -14,7 +14,7 @@ import java.io.File;
 public abstract class CipherAlgorithm implements Cipher {
 
     protected String texttocipher;
-
+public String cipheredtext;
     public CipherAlgorithm() {
     }
 
