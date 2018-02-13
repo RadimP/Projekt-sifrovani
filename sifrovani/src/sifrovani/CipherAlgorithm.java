@@ -6,12 +6,13 @@
 package sifrovani;
 
 import java.io.File;
+import java.io.Serializable;
 
 /**
  *
  * @author Student
  */
-public abstract class CipherAlgorithm implements Cipher {
+public abstract class CipherAlgorithm implements Cipher, Serializable {
 
     protected String texttocipher;
 public String cipheredtext;
