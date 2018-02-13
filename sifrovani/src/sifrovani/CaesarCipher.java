@@ -6,6 +6,8 @@
 package sifrovani;
 
 import java.io.File;
+import java.util.ArrayList;
+import java.util.Arrays;
 
 /**
  * Class for coding text using Caesar sipher.
@@ -13,7 +15,12 @@ import java.io.File;
  * @author zdenek
  */
 public class CaesarCipher extends CipherAlgorithm {
-        protected String code;
+
+    public ArrayList<String> cipher = new ArrayList<>();
+    public ArrayList<String> decipher = new ArrayList<>();
+    protected String code = "123";
+    private String readyText;
+
     /**
      * Constructor for Caesar ciphre using text on input
      *
@@ -50,66 +57,92 @@ public class CaesarCipher extends CipherAlgorithm {
     }
 
     /**
-     * it encodes text to cipher
+     * encodes text to cipher 
      *
+     * letters
      *
+     * @param string text
      */
     @Override
-    public void cipher(String string) {
+    public void cipher(String string) { // převeď array na string
+        this.readyText = string;
 
-        this.texttocipher = string;
-        this.prepareText();
-        
         // main algorithm
         int j = 0, s = 1;
-        for (int i = 0; i < this.texttocipher.length(); i++) {
+        for (int i = 0; i < this.readyText.length(); i++) {
+            if (s == 1) {
+                if ((int) this.readyText.charAt(i) <= 90 && ((int) this.readyText.charAt(i) + s * ((int) this.code.charAt(j) - 48)) > 90) {
+                    // (char) ((int) this.texttocipher.charAt(i) + s * ((int) this.code.charAt(j) - 48) - 25
+                    this.cipher.add(Character.toString((char) ((int) this.readyText.charAt(i) + s * (int) (this.code.charAt(j) - 48) - 26)));
+                    // System.out.print( )
 
+                } else {
+
+                    this.cipher.add(Character.toString((char) ((int) this.readyText.charAt(i) + s * (int) this.code.charAt(j) - 48)));
+                }
+            } else if ((int) this.readyText.charAt(i) <= 90 && ((int) this.readyText.charAt(i) + s * ((int) this.code.charAt(j) - 48)) < 65) {
+
+                this.cipher.add(Character.toString((char) ((int) this.readyText.charAt(i) + s * ((int) this.code.charAt(j) - 48) + 26)));
+
+            } else {
+
+                this.cipher.add(Character.toString((char) ((int) this.readyText.charAt(i) + s * ((int) this.code.charAt(j) - 48))));
+            }
+            if (j == this.code.length() - 1) {
+                j = 0;
+                s = s * -1;
+
+            } else {
+                j++;
+            }
         }
 
     }
 
     @Override
     public void cipher(File file) {
- /*String kod = "779";
-        String veta = "AHOj JAVa!";
-        int j = 0, s = 1;
-        for (int i = 0; i < veta.length(); i++) {
-            if (veta.charAt(i) >= 65 && veta.charAt(i) <= 90 || veta.charAt(i) >= 97 && veta.charAt(i) <= 122) {
-                if (s == 1) {
-                    if ((int) veta.charAt(i) <= 90 && ((int) veta.charAt(i) + s * ((int) kod.charAt(j) - 48)) > 90 || ((int) veta.charAt(i) >= 97 && ((int) veta.charAt(i) + s * ((int) kod.charAt(j) - 48)) > 122)) {
-                        System.out.print(
-                                (char) ((int) veta.charAt(i) + s * ((int) kod.charAt(j) - 48) - 25)
-                        );
-                    } else {
-                        System.out.print(
-                                (char) ((int) veta.charAt(i) + s * ((int) kod.charAt(j) - 48)));
-                    }
-                } else if ((int) veta.charAt(i) <= 90 && ((int) veta.charAt(i) + s * ((int) kod.charAt(j) - 48)) < 65 || ((int) veta.charAt(i) >= 97 && ((int) veta.charAt(i) + s * ((int) kod.charAt(j) - 48)) < 97)) {
-                    System.out.print(
-                            (char) ((int) veta.charAt(i) + s * ((int) kod.charAt(j) - 48) + 25)
-                    );
-                } else {
-                    System.out.print(
-                            (char) ((int) veta.charAt(i) + s * ((int) kod.charAt(j) - 48)));
-                }
-                if (j == kod.length() - 1) {
-                    j = 0;
-                    s = s * -1;
 
-                } else {
-                    j++;
-                }
-            } else {
-                System.out.print(veta.charAt(i));
-            }
-        }
-        
-        Text_sifruj sifra=new Text_sifruj();*/
-        
     }
-
+/**
+     * DEcodes CIPHER to text 
+     * 
+     * letters
+     *
+     * @param string text
+     */
+    
     @Override
-    public void decipher(String string) {
+    public void decipher(String string) {// převeĎ výsledek na string
+
+        this.cipheredtext = "ANXSMLDMROGZB";
+        int j = 0, s = 1;
+        for (int i = 0; i < this.cipheredtext.length(); i++) {
+            if (s == 1) {
+                if (((int) this.cipheredtext.charAt(i) - s * ((int) this.code.charAt(j) - 48)) < 65) {
+
+                    this.decipher.add(Character.toString((char) ((int) this.cipheredtext.charAt(i) - s * (int) (this.code.charAt(j) - 48) + 26)));
+
+                } else {
+
+                    this.decipher.add(Character.toString((char) ((int) this.cipheredtext.charAt(i) - s * ((int) this.code.charAt(j) - 48))));
+                }
+            } else if (((int) this.cipheredtext.charAt(i) - s * ((int) this.code.charAt(j) - 48)) > 90) {
+
+                this.decipher.add(Character.toString((char) ((int) this.cipheredtext.charAt(i) - s * ((int) this.code.charAt(j) - 48) - 26)));
+
+            } else {
+
+                this.decipher.add(Character.toString((char) ((int) this.cipheredtext.charAt(i) - s * ((int) this.code.charAt(j) - 48))));
+            }
+            if (j == this.code.length() - 1) {
+                j = 0;
+                s = s * -1;
+
+            } else {
+                j++;
+            }
+
+        }
 
     }
 
@@ -117,4 +150,15 @@ public class CaesarCipher extends CipherAlgorithm {
     public void decipher(File file) {
     }
 
+    public String toStringCipher() {
+
+        return Arrays.toString(this.cipher.toArray());
+
+    }
+
+    public String toStringDeCipher() {
+
+        return Arrays.toString(this.decipher.toArray());
+
+    }
 }
