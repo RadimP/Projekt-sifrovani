@@ -226,22 +226,36 @@ public class VigenereCipher extends CipherAlgorithm implements Serializable {
 
     @Override
     public void decipher(File file) {
-        this.key=null;
-        this.cipheredtext=null;
         
-        System.out.println(this.getKey() +", šifrovaný text: " +this.cipheredtext);
-    try {
         
-        DataInputStream in = new DataInputStream(
-                     new FileInputStream(file));
-         key = in.readUTF();
-        cipheredtext = in.readUTF();
-        in.close();
-   
-     } catch (IOException ex) {
-     Logger.getLogger(VigenereCipher.class.getName()).log(Level.SEVERE, null, ex);
-    }
-     System.out.println(this.getKey() +", šiforvaný text: " +this.cipheredtext); 
+        try {
+            /* System.out.println(this.getKey() +", šifrovaný text: " +this.cipheredtext);
+            try {
+            
+            DataInputStream in = new DataInputStream(
+            new FileInputStream(file));
+            key = in.readUTF();
+            cipheredtext = in.readUTF();
+            in.close();
+            
+            } catch (IOException ex) {
+            Logger.getLogger(VigenereCipher.class.getName()).log(Level.SEVERE, null, ex);
+            }*/
+            Sifrovani.Helper.deserialize(file.getPath());
+        } catch (Exception ex) {
+            Logger.getLogger(VigenereCipher.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        try {
+            key=((VigenereCipher) Sifrovani.Helper.deserialize(file.getPath())).getKey();
+        } catch (Exception ex) {
+            Logger.getLogger(VigenereCipher.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        try {
+            cipheredtext=((VigenereCipher) Sifrovani.Helper.deserialize(file.getPath())).cipheredtext;
+        } catch (Exception ex) {
+            Logger.getLogger(VigenereCipher.class.getName()).log(Level.SEVERE, null, ex);
+        }
+     System.out.println(this.getKey() +", šifrovaný text: " +this.cipheredtext); 
     this.decipherText();
     }
 
