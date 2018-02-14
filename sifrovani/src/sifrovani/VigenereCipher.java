@@ -26,7 +26,7 @@ import java.util.logging.Logger;
  */
 public class VigenereCipher extends CipherAlgorithm implements Serializable {
 
-    
+ // http://javarevisited.blogspot.cz/2012/12/how-to-read-input-from-command-line-in-java.html interaktivní zadávání vstupu z commandline   
     private String key;
     private String decipheredtext;
 
