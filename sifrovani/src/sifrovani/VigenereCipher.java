@@ -26,8 +26,8 @@ import java.util.logging.Logger;
  */
 public class VigenereCipher extends CipherAlgorithm implements Serializable {
 
- // http://javarevisited.blogspot.cz/2012/12/how-to-read-input-from-command-line-in-java.html interaktivní zadávání vstupu z commandline   
-    private String key;
+    // http://javarevisited.blogspot.cz/2012/12/how-to-read-input-from-command-line-in-java.html interaktivní zadávání vstupu z commandline   
+    private String key ="";
     private String decipheredtext;
 
     public VigenereCipher() {
@@ -35,11 +35,11 @@ public class VigenereCipher extends CipherAlgorithm implements Serializable {
 
     public VigenereCipher(String texttocipher) {
         /* if(texttocipher.length()<3) { 
-            throw new IllegalArgumentException("Text, který se má šifrovat, je kratší než tři znaky");} else
-        {  this.texttocipher = texttocipher;
-        if(this.removeAllNonletterCharacters().length()<3) { 
-            throw new IllegalArgumentException("Text, který se má šifrovat, bude po úpravě kratší než tři znaky");}
-        }*/
+         throw new IllegalArgumentException("Text, který se má šifrovat, je kratší než tři znaky");} else
+         {  this.texttocipher = texttocipher;
+         if(this.removeAllNonletterCharacters().length()<3) { 
+         throw new IllegalArgumentException("Text, který se má šifrovat, bude po úpravě kratší než tři znaky");}
+         }*/
         this.texttocipher = texttocipher;
     }
 
@@ -75,13 +75,13 @@ public class VigenereCipher extends CipherAlgorithm implements Serializable {
      * @return vrátí String texttocipher bez diakritiky
      */
     public String replaceDiacritics() {
-      /*  String[] diacritics = new String[]{"À", "Á", "Â", "Ã", "Ä", "Å", "Ç", "È", "É", "Ê", "Ë", "Ì", "Í", "Î", "Ï", "Ñ", "Ò", "Ó", "Ô", "Õ", "Ö", "Ù", "Ú", "Û", "Ü", "Ý", "ß", "à", "á", "â", "ã", "ä", "å", "ç", "è", "é", "ê", "ë", "ì", "í", "î", "ï", "ñ", "ò", "ó", "ô", "õ", "ö", "ù", "ú", "û", "ü", "ý", "ÿ", "Ā", "ā", "Ă", "ă", "Ą", "ą", "Ć", "ć", "Ĉ", "ĉ", "Ċ", "ċ", "Č", "č", "Ď", "ď", "Đ", "đ", "Ē", "ē", "Ĕ", "ĕ", "Ė", "ė", "Ę", "ę", "Ě", "ě", "Ĝ", "ĝ", "Ğ", "ğ", "Ġ", "ġ", "Ģ", "ģ", "Ĥ", "ĥ", "Ħ", "ħ", "Ĩ", "ĩ", "Ī", "ī", "Ĭ", "ĭ", "Į", "į", "İ", "ı", "Ķ", "ķ", "ĸ", "Ĺ", "ĺ", "Ļ", "ļ", "Ľ", "ľ", "Ŀ", "ŀ", "Ł", "ł", "Ń", "ń", "Ņ", "ņ", "Ň", "ň", "ŉ", "Ŋ", "ŋ", "Ō", "ō", "Ŏ", "ŏ", "Ő", "ő", "Ŕ", "ŕ", "Ŗ", "ŗ", "Ř", "ř", "Ś", "ś", "Ŝ", "ŝ", "Ş", "ş", "Š", "š", "Ţ", "ţ", "Ť", "ť", "Ŧ", "ŧ", "Ũ", "ũ", "Ū", "ū", "Ŭ", "ŭ", "Ů", "ů", "Ű", "ű", "Ų", "ų", "Ŵ", "ŵ", "Ŷ", "ŷ", "Ÿ", "Ź", "ź", "Ż", "ż", "Ž", "ž", "ſ"};
-        String[] nondiacritics = new String[]{"A", "A", "A", "A", "A", "A", "C", "E", "E", "E", "E", "I", "I", "I", "I", "N", "O", "O", "O", "O", "O", "U", "U", "U", "U", "Y", "s", "a", "a", "a", "a", "a", "a", "c", "e", "e", "e", "e", "i", "i", "i", "i", "n", "o", "o", "o", "o", "o", "u", "u", "u", "u", "y", "y", "A", "a", "A", "a", "A", "a", "C", "c", "C", "c", "C", "c", "C", "c", "D", "d", "D", "d", "E", "e", "E", "e", "E", "e", "E", "e", "E", "e", "G", "g", "G", "g", "G", "g", "G", "g", "H", "h", "H", "h", "I", "i", "I", "i", "I", "i", "I", "i", "I", "i", "K", "k", "k", "L", "l", "L", "l", "L", "l", "L", "l", "L", "l", "N", "n", "N", "n", "N", "n", "N", "n", "N", "O", "o", "O", "o", "O", "o", "R", "r", "R", "r", "R", "r", "S", "s", "S", "s", "S", "s", "S", "s", "T", "t", "T", "t", "T", "t", "U", "u", "U", "u", "U", "u", "U", "u", "U", "u", "U", "u", "W", "w", "Y", "y", "Y", "Z", "z", "Z", "z", "Z", "z", "s"};
-        for (int i = 0; i < diacritics.length; i++) {
-            if (this.texttocipher.contains(diacritics[i])) {
-                this.texttocipher = this.texttocipher.replace(diacritics[i], nondiacritics[i]);
-            }
-        }*/
+        /*  String[] diacritics = new String[]{"À", "Á", "Â", "Ã", "Ä", "Å", "Ç", "È", "É", "Ê", "Ë", "Ì", "Í", "Î", "Ï", "Ñ", "Ò", "Ó", "Ô", "Õ", "Ö", "Ù", "Ú", "Û", "Ü", "Ý", "ß", "à", "á", "â", "ã", "ä", "å", "ç", "è", "é", "ê", "ë", "ì", "í", "î", "ï", "ñ", "ò", "ó", "ô", "õ", "ö", "ù", "ú", "û", "ü", "ý", "ÿ", "Ā", "ā", "Ă", "ă", "Ą", "ą", "Ć", "ć", "Ĉ", "ĉ", "Ċ", "ċ", "Č", "č", "Ď", "ď", "Đ", "đ", "Ē", "ē", "Ĕ", "ĕ", "Ė", "ė", "Ę", "ę", "Ě", "ě", "Ĝ", "ĝ", "Ğ", "ğ", "Ġ", "ġ", "Ģ", "ģ", "Ĥ", "ĥ", "Ħ", "ħ", "Ĩ", "ĩ", "Ī", "ī", "Ĭ", "ĭ", "Į", "į", "İ", "ı", "Ķ", "ķ", "ĸ", "Ĺ", "ĺ", "Ļ", "ļ", "Ľ", "ľ", "Ŀ", "ŀ", "Ł", "ł", "Ń", "ń", "Ņ", "ņ", "Ň", "ň", "ŉ", "Ŋ", "ŋ", "Ō", "ō", "Ŏ", "ŏ", "Ő", "ő", "Ŕ", "ŕ", "Ŗ", "ŗ", "Ř", "ř", "Ś", "ś", "Ŝ", "ŝ", "Ş", "ş", "Š", "š", "Ţ", "ţ", "Ť", "ť", "Ŧ", "ŧ", "Ũ", "ũ", "Ū", "ū", "Ŭ", "ŭ", "Ů", "ů", "Ű", "ű", "Ų", "ų", "Ŵ", "ŵ", "Ŷ", "ŷ", "Ÿ", "Ź", "ź", "Ż", "ż", "Ž", "ž", "ſ"};
+         String[] nondiacritics = new String[]{"A", "A", "A", "A", "A", "A", "C", "E", "E", "E", "E", "I", "I", "I", "I", "N", "O", "O", "O", "O", "O", "U", "U", "U", "U", "Y", "s", "a", "a", "a", "a", "a", "a", "c", "e", "e", "e", "e", "i", "i", "i", "i", "n", "o", "o", "o", "o", "o", "u", "u", "u", "u", "y", "y", "A", "a", "A", "a", "A", "a", "C", "c", "C", "c", "C", "c", "C", "c", "D", "d", "D", "d", "E", "e", "E", "e", "E", "e", "E", "e", "E", "e", "G", "g", "G", "g", "G", "g", "G", "g", "H", "h", "H", "h", "I", "i", "I", "i", "I", "i", "I", "i", "I", "i", "K", "k", "k", "L", "l", "L", "l", "L", "l", "L", "l", "L", "l", "N", "n", "N", "n", "N", "n", "N", "n", "N", "O", "o", "O", "o", "O", "o", "R", "r", "R", "r", "R", "r", "S", "s", "S", "s", "S", "s", "S", "s", "T", "t", "T", "t", "T", "t", "U", "u", "U", "u", "U", "u", "U", "u", "U", "u", "U", "u", "W", "w", "Y", "y", "Y", "Z", "z", "Z", "z", "Z", "z", "s"};
+         for (int i = 0; i < diacritics.length; i++) {
+         if (this.texttocipher.contains(diacritics[i])) {
+         this.texttocipher = this.texttocipher.replace(diacritics[i], nondiacritics[i]);
+         }
+         }*/
         String normalized = java.text.Normalizer.normalize(this.texttocipher, java.text.Normalizer.Form.NFD);// change stanart czech diacritic to non diacritic
         this.texttocipher = normalized.replaceAll("\\p{InCombiningDiacriticalMarks}+", "");// remove diacritical marks which left after normalizer
         return this.texttocipher;
@@ -111,6 +111,20 @@ public class VigenereCipher extends CipherAlgorithm implements Serializable {
         }
     }
 
+    public void cipher(String string, String key) {
+        if (string.length() < 3) {
+            throw new IllegalArgumentException("Text, který se má šifrovat, je kratší než tři znaky");
+        }
+        this.texttocipher = string;
+        this.key=key;
+        this.encipher(key);
+        try {
+            this.putDataIntoFile();
+        } catch (Exception ex) {
+            Logger.getLogger(VigenereCipher.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
     public String encipher() {
         StringBuilder builder = new StringBuilder();
         String s = this.prepareText();
@@ -131,6 +145,22 @@ public class VigenereCipher extends CipherAlgorithm implements Serializable {
             throw new IllegalArgumentException("Klic retezec neobsahuje jen velka pismena");
         }
         return ((int) key.charAt(i % key.length())) - 65;
+    }
+
+    public String encipher(String key) {
+        StringBuilder builder = new StringBuilder();
+        String s = this.prepareText();
+        key=prepareKey(key);
+this.key=key;
+        for (int i = 0; i < s.length(); i++) {
+            if (s.charAt(i) < 65 || s.charAt(i) > 90) { //znak v ASCII
+                throw new IllegalArgumentException("Sifrovany retezec neobsahuje jen velka pismena");
+            }
+            //modularne pricteme shift
+            char encyphered = s.charAt(i) + getShift(key, i) > 90 ? (char) ((s.charAt(i) + getShift(key, i)) - 26) : (char) (s.charAt(i) + getShift(key, i));
+            builder.append(encyphered);
+        }
+        return this.cipheredtext = builder.toString();
     }
 
     /**
@@ -175,22 +205,36 @@ public class VigenereCipher extends CipherAlgorithm implements Serializable {
         return this.key = builder.toString();
     }
 
+    /**
+     * Tato metoda upraví zadaný klíč tak, aby obsahoval jen velká písmena -
+     * znaky anglické abecedy
+     *
+     * @param key zadaný klíč
+     * @return upravený klíč key
+     */
+    public String prepareKey(String key) {
+        key = key.replaceAll("[^\\p{L} ]", "").replaceAll("\\s", "").toUpperCase();
+        key = java.text.Normalizer.normalize(key, java.text.Normalizer.Form.NFD);
+        key = key.replaceAll("\\p{InCombiningDiacriticalMarks}+", "");
+        return  key;
+    }
+
     public String getKey() {
         return this.key;
     }
-    
+
     public void putDataIntoFile() throws Exception {
-    try {
-           FileOutputStream fname = new FileOutputStream("vigenerecipher.dat");
+        try {
+            FileOutputStream fname = new FileOutputStream("vigenerecipher.dat");
             DataOutputStream out = new DataOutputStream(fname);
-           
+
             out.writeUTF(key);
             out.writeUTF(this.cipheredtext);
             out.close();
         } catch (IOException e) {
             throw new Exception("Chyba při zápisu souboru : " + e);
         }
-    
+
     }
 
     @Override
@@ -226,67 +270,66 @@ public class VigenereCipher extends CipherAlgorithm implements Serializable {
 
     @Override
     public void decipher(File file) {
-        
-        
+
         try {
             /* System.out.println(this.getKey() +", šifrovaný text: " +this.cipheredtext);
-            try {
+             try {
             
-            DataInputStream in = new DataInputStream(
-            new FileInputStream(file));
-            key = in.readUTF();
-            cipheredtext = in.readUTF();
-            in.close();
+             DataInputStream in = new DataInputStream(
+             new FileInputStream(file));
+             key = in.readUTF();
+             cipheredtext = in.readUTF();
+             in.close();
             
-            } catch (IOException ex) {
-            Logger.getLogger(VigenereCipher.class.getName()).log(Level.SEVERE, null, ex);
-            }*/
+             } catch (IOException ex) {
+             Logger.getLogger(VigenereCipher.class.getName()).log(Level.SEVERE, null, ex);
+             }*/
             Sifrovani.Helper.deserialize(file.getPath());
         } catch (Exception ex) {
             Logger.getLogger(VigenereCipher.class.getName()).log(Level.SEVERE, null, ex);
         }
         try {
-            key=((VigenereCipher) Sifrovani.Helper.deserialize(file.getPath())).getKey();
+            key = ((VigenereCipher) Sifrovani.Helper.deserialize(file.getPath())).getKey();
         } catch (Exception ex) {
             Logger.getLogger(VigenereCipher.class.getName()).log(Level.SEVERE, null, ex);
         }
         try {
-            cipheredtext=((VigenereCipher) Sifrovani.Helper.deserialize(file.getPath())).cipheredtext;
+            cipheredtext = ((VigenereCipher) Sifrovani.Helper.deserialize(file.getPath())).cipheredtext;
         } catch (Exception ex) {
             Logger.getLogger(VigenereCipher.class.getName()).log(Level.SEVERE, null, ex);
         }
-     System.out.println(this.getKey() +", šifrovaný text: " +this.cipheredtext); 
-    this.decipherText();
+        System.out.println(this.getKey() + ", šifrovaný text: " + this.cipheredtext);
+        this.decipherText();
     }
 
-  /*  public void serialize() throws Exception {
-        try {
-            // Serializace do souboru
-            ObjectOutput out = new ObjectOutputStream(
-                    new FileOutputStream("vigenerecipher.dat"));
-            // jméno souboru
-            out.writeObject(this);
-            out.close();
-        } catch (IOException e) {
-            throw new Exception("Chyba při zápisu souboru : " + e);
-        }
+    /*  public void serialize() throws Exception {
+     try {
+     // Serializace do souboru
+     ObjectOutput out = new ObjectOutputStream(
+     new FileOutputStream("vigenerecipher.dat"));
+     // jméno souboru
+     out.writeObject(this);
+     out.close();
+     } catch (IOException e) {
+     throw new Exception("Chyba při zápisu souboru : " + e);
+     }
 
-    }*/
-   /* public void deserialize() throws Exception {
-        VigenereCipher vciph;   
-        // Načtení ze souboru
-        try {
-        File file = new File("vigenerecipher.dat");
-        ObjectInputStream in = new ObjectInputStream(
-                     new FileInputStream(file));
-        // Deserializace objektu
-        vciph = (VigenereCipher) in.readObject(); 
+     }*/
+    /* public void deserialize() throws Exception {
+     VigenereCipher vciph;   
+     // Načtení ze souboru
+     try {
+     File file = new File("vigenerecipher.dat");
+     ObjectInputStream in = new ObjectInputStream(
+     new FileInputStream(file));
+     // Deserializace objektu
+     vciph = (VigenereCipher) in.readObject(); 
         
-        in.close();
+     in.close();
    
      } catch (IOException ex) {
      Logger.getLogger(VigenereCipher.class.getName()).log(Level.SEVERE, null, ex);
-    }
+     }
         
-    }*/
+     }*/
 }
