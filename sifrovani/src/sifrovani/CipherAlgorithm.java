@@ -23,11 +23,7 @@ public String cipheredtext;
         this.texttocipher = texttocipher;
 
     }
-public abstract String prepareText();
 
-//public abstract void cipherText();
-
-//public abstract void decipherText();
 
     @Override
     public abstract void cipher(String string);
