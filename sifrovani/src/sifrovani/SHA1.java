@@ -21,7 +21,7 @@ public class SHA1 extends CipherAlgorithm implements Serializable {
     }
 
     public SHA1(String texttocipher) {
-                this.texttocipher = texttocipher;
+                this.texttocipher = Sifrovani.Helper.adjustStringToLettersAndUpperCases(texttocipher);
     }
     
     
@@ -29,7 +29,8 @@ public class SHA1 extends CipherAlgorithm implements Serializable {
     
     @Override
     public void cipher(String string) {
-        String value = "this is a test";
+        this.texttocipher=Sifrovani.Helper.adjustStringToLettersAndUpperCases(string);
+        
 
 		String sha1 = "";
 		
@@ -37,13 +38,13 @@ public class SHA1 extends CipherAlgorithm implements Serializable {
 		try {
 			MessageDigest digest = MessageDigest.getInstance("SHA-1");
 	        digest.reset();
-	        digest.update(value.getBytes("utf8"));
+	        digest.update(this.texttocipher.getBytes("utf8"));
 	        sha1 = String.format("%040x", new BigInteger(1, digest.digest()));
 		} catch (Exception e){
 			e.printStackTrace();
 		}
 
-		System.out.println( "The sha1 of \""+ value + "\" is:");
+		System.out.println( "The sha1 of \""+ this.texttocipher + "\" is:");
 		System.out.println( sha1 );
 		System.out.println();
     }
