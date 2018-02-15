@@ -150,13 +150,7 @@ public class VigenereCipher extends CipherAlgorithm implements Serializable {
         return this.key = builder.toString();
     }
 
-    /**
-     * Tato metoda upraví zadaný klíč tak, aby obsahoval jen velká písmena -
-     * znaky anglické abecedy
-     *
-     * @param key zadaný klíč
-     * @return upravený klíč key
-     */
+    
     
 
     public String getKey() {
