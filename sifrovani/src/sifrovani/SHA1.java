@@ -15,38 +15,31 @@ import java.security.MessageDigest;
  * @author Student
  */
 public class SHA1 extends CipherAlgorithm implements Serializable {
- private String decipheredtext;
- 
- public SHA1() {
+
+    private String decipheredtext;
+
+    public SHA1() {
     }
 
     public SHA1(String texttocipher) {
-                this.texttocipher = Sifrovani.Helper.adjustStringToLettersAndUpperCases(texttocipher);
+        this.texttocipher = Sifrovani.Helper.adjustStringToLettersAndUpperCases(texttocipher);
     }
-    
-    
 
-    
     @Override
     public void cipher(String string) {
-        this.texttocipher=Sifrovani.Helper.adjustStringToLettersAndUpperCases(string);
+        this.texttocipher = Sifrovani.Helper.adjustStringToLettersAndUpperCases(string);
+
+        // With the java libraries
+        try {
+            MessageDigest digest = MessageDigest.getInstance("SHA-1");
+            digest.reset();
+            digest.update(this.texttocipher.getBytes("utf8"));
+            this.cipheredtext = String.format("%040x", new BigInteger(1, digest.digest()));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
         
-
-		String sha1 = "";
-		
-		// With the java libraries
-		try {
-			MessageDigest digest = MessageDigest.getInstance("SHA-1");
-	        digest.reset();
-	        digest.update(this.texttocipher.getBytes("utf8"));
-	        sha1 = String.format("%040x", new BigInteger(1, digest.digest()));
-		} catch (Exception e){
-			e.printStackTrace();
-		}
-
-		System.out.println( "The sha1 of \""+ this.texttocipher + "\" is:");
-		System.out.println( sha1 );
-		System.out.println();
     }
 
     @Override
@@ -63,5 +56,5 @@ public class SHA1 extends CipherAlgorithm implements Serializable {
     public void decipher(File file) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
-    
+
 }
