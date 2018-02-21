@@ -39,7 +39,7 @@ public class CaesarCipher extends CipherAlgorithm {
      *
      * @return text for code
      */
-    @Override
+    
     public String prepareText() {
 
         this.texttocipher = this.texttocipher.toUpperCase(); // change text to uppercase

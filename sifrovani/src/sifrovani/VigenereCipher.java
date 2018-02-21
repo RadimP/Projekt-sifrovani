@@ -5,18 +5,25 @@
  */
 package sifrovani;
 
+import java.io.BufferedReader;
+import java.io.ByteArrayOutputStream;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutput;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Random;
+import java.util.Scanner;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -24,50 +31,37 @@ import java.util.logging.Logger;
  *
  * @author RadimP
  */
-public class VigenereCipher extends CipherAlgorithm implements Serializable {
+public class VigenereCipher extends CipherAlgorithm implements Serializable, Cipher {
 
-    // http://javarevisited.blogspot.cz/2012/12/how-to-read-input-from-command-line-in-java.html interaktivní zadávání vstupu z commandline   
     private String key = "";
     private String decipheredtext;
+    private String filename;
 
     public VigenereCipher() {
     }
 
     public VigenereCipher(String texttocipher) {
-                this.texttocipher = texttocipher;
+        this.texttocipher = texttocipher;
     }
-
-    
-    
-
-    
 
     @Override
     public void cipher(String string) {
-        if (string.length() < 3) {
-            throw new IllegalArgumentException("Text, který se má šifrovat, je kratší než tři znaky");
+        if (string.length() < 1) {
+            throw new IllegalArgumentException("Text, který se má šifrovat, neobsahuje žádné znaky");
         }
         this.texttocipher = string;
         this.encipher();
-        try {
-            this.putDataIntoFile();
-        } catch (Exception ex) {
-            Logger.getLogger(VigenereCipher.class.getName()).log(Level.SEVERE, null, ex);
-        }
+
     }
 
     public void cipher(String string, String key) {
-        if (string.length() < 3) {
-            throw new IllegalArgumentException("Text, který se má šifrovat, je kratší než tři znaky");
+        if (string.length() < 1) {
+            throw new IllegalArgumentException("Text, který se má šifrovat, neobsahuje žádné znaky");
         }
         this.texttocipher = string;
         this.key = key;
         this.encipher(key);
-        try {
-            this.putDataIntoFile();
-        } catch (Exception ex) {
-            Logger.getLogger(VigenereCipher.class.getName()).log(Level.SEVERE, null, ex);
-        }
+
     }
 
     public String encipher() {
@@ -109,33 +103,32 @@ public class VigenereCipher extends CipherAlgorithm implements Serializable {
     }
 
     /**
-     * Tato metoda nastaví délku klíče minimálně tři znaky a maximálně dvě
-     * třetiny délky textu, který se má šifrovat. V rozmězí délky tři, čtyři a
-     * pět znaků je minimální délka klíče 3 a maximální délka shodná s délkou
-     * textu.
+     * Tato metoda nastaví délku klíče minimálně jeden znak a maximálně dvě
+     * třetiny délky textu, který se má šifrovat. V rozmězí délky jeden až pět
+     * znaků je minimální délka klíče 1 a maximální délka shodná s délkou textu.
      *
      * @return délka klíče
      */
     private int setLengthOfKey() {
         Random rand = new Random();
-        int lenghtofkey = 0;
-        if (Sifrovani.Helper.adjustStringToLettersAndUpperCases(this.texttocipher).length() < 3) {
-            throw new IllegalArgumentException("Text, který se má šifrovat, je kratší než tři znaky");
+        int lengthofkey = 0;
+        if (Sifrovani.Helper.adjustStringToLettersAndUpperCases(this.texttocipher).length() < 1) {
+            throw new IllegalArgumentException("Text, který se má šifrovat, neobsahuje žádné znaky");
         }
         if (Sifrovani.Helper.adjustStringToLettersAndUpperCases(this.texttocipher).length() > 5) {
-            lenghtofkey = rand.nextInt(2 * Sifrovani.Helper.adjustStringToLettersAndUpperCases(this.texttocipher).length() / 3 - 2) + 3;
+            lengthofkey = rand.nextInt(2 * Sifrovani.Helper.adjustStringToLettersAndUpperCases(this.texttocipher).length() / 3 - 2) + 3;
         } else {
-            lenghtofkey = rand.nextInt(Sifrovani.Helper.adjustStringToLettersAndUpperCases(this.texttocipher).length() - 2) + 3;
+            lengthofkey = rand.nextInt(Sifrovani.Helper.adjustStringToLettersAndUpperCases(this.texttocipher).length() - 2) + 1;
         }
-        return lenghtofkey;
+        return lengthofkey;
     }
 
     /**
-     * Tato metoda vytvoří šifrovací klíč o délce minimálně tři znaky a
+     * Tato metoda vytvoří šifrovací klíč o délce minimálně jeden znak a
      * maximálně dvě třetiny délky textu, který se má šifrovat. Text, který se
-     * má šifrovat, musí být dlouhý minimálně tři znaky. V rozmězí délky tři,
-     * čtyři a pět znaků je minimální délka klíče 3 a maximální délka shodná s
-     * délkou textu.
+     * má šifrovat, musí být dlouhý minimálně jeden znak. V rozmězí délky jedna
+     * až pět znaků je minimální délka klíče 3 a maximální délka shodná s délkou
+     * textu.
      *
      * @return šifrovací klíč
      */
@@ -150,15 +143,12 @@ public class VigenereCipher extends CipherAlgorithm implements Serializable {
         return this.key = builder.toString();
     }
 
-    
-    
-
     public String getKey() {
         return this.key;
     }
 
     public void putDataIntoFile() throws Exception {
-        try {
+       /* try {
             FileOutputStream fname = new FileOutputStream("vigenerecipher.dat");
             DataOutputStream out = new DataOutputStream(fname);
 
@@ -167,13 +157,94 @@ public class VigenereCipher extends CipherAlgorithm implements Serializable {
             out.close();
         } catch (IOException e) {
             throw new Exception("Chyba při zápisu souboru : " + e);
+        }*/
+ File file= new File("vigenereciphered.txt");   
+ this.filename=file.getPath();
+FileWriter out = new FileWriter(file);
+out.write(this.cipheredtext);
+out.write("@" +this.key);
+out.close();
+    }
+    
+    public String getFilename() {
+    return this.filename;
+    }
+
+    /*private*/ String readFromFileUTF16(File file) throws FileNotFoundException, IOException {
+
+        ByteArrayOutputStream result = new ByteArrayOutputStream();
+        InputStream inputstream = new FileInputStream(file);
+        byte[] buffer = new byte[1024];
+        int length;
+        while ((length = inputstream.read(buffer)) != -1) {
+            result.write(buffer, 0, length);
         }
 
+        return result.toString("Cp1250");
+    }
+    
+ private String readFromFileUTF8(File file) throws FileNotFoundException, IOException {
+
+        ByteArrayOutputStream result = new ByteArrayOutputStream();
+        InputStream inputstream = new FileInputStream(file);
+        byte[] buffer = new byte[1024];
+        int length;
+        while ((length = inputstream.read(buffer)) != -1) {
+            result.write(buffer, 0, length);
+        }
+
+        return result.toString("UTF-8");
+    }
+ 
+    /*private*/ void getTextToCipherFromFile(File file) throws IOException {
+        String[] tmp = this.readFromFileUTF16(file).split("@");
+        this.texttocipher = Sifrovani.Helper.adjustStringToLettersAndUpperCases(tmp[0]);
+        System.out.println(tmp[0]);
+    }
+    
+    private void getCipheredTextFromFile(File file) throws IOException {
+        String[] tmp = this.readFromFileUTF8(file).split("@");
+        this.cipheredtext = Sifrovani.Helper.adjustStringToLettersAndUpperCases(tmp[0]);
+       System.out.println(tmp[0]);
+    }
+
+    private String getKeyFromFile(File file) throws IOException {
+        String keyfromfile = "";
+        String[] tmp = this.readFromFileUTF16(file).split("@");
+        if (tmp.length > 1) {
+            keyfromfile = Sifrovani.Helper.adjustStringToLettersAndUpperCases(tmp[1]);
+        }
+        System.out.println(keyfromfile);
+        return keyfromfile;
+    }
+    private String getKeyFromFileUTF8(File file) throws IOException {
+        String keyfromfile = "";
+        String[] tmp = this.readFromFileUTF8(file).split("@");
+        if (tmp.length > 1) {
+            keyfromfile = Sifrovani.Helper.adjustStringToLettersAndUpperCases(tmp[1]);
+        }
+        System.out.println(keyfromfile);
+        return keyfromfile;
     }
 
     @Override
     public void cipher(File file) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+
+        try {
+            if (this.getKeyFromFile(file) != null) {
+                this.getTextToCipherFromFile(file);
+                this.encipher(this.getKeyFromFile(file));
+                this.putDataIntoFile();
+            } else {
+                this.getTextToCipherFromFile(file);
+                this.encipher();
+                this.putDataIntoFile();
+            }
+        } catch (IOException ex) {
+            Logger.getLogger(VigenereCipher.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (Exception ex) {
+            Logger.getLogger(VigenereCipher.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
     @Override
@@ -181,11 +252,33 @@ public class VigenereCipher extends CipherAlgorithm implements Serializable {
         this.cipheredtext = string;
         decipherText();
     }
+    
+    public void decipher(String string, String key) {
+     this.cipheredtext = string;
+        decipherText(key);
+       
+    }
 
     public String decipherText() {
         StringBuilder builder = new StringBuilder();
         String s = this.cipheredtext;
         String key = getKey();
+        for (int i = 0; i < s.length(); i++) {
+            if (s.charAt(i) < 65 || s.charAt(i) > 90) {
+                throw new IllegalArgumentException(
+                        "Desifrovany retezec neobsahuje jen velka pismena");
+            }
+
+            char decyphered = s.charAt(i) - getShift(key, i) < 65 ? (char) ((s.charAt(i) - getShift(key, i)) + 26) : (char) (s.charAt(i) - getShift(key, i));
+            builder.append(decyphered);
+        }
+        return decipheredtext = builder.toString();
+    }
+    
+    public String decipherText(String key) {
+        StringBuilder builder = new StringBuilder();
+        String s = this.cipheredtext;
+        this.key= key;
         for (int i = 0; i < s.length(); i++) {
             if (s.charAt(i) < 65 || s.charAt(i) > 90) {
                 throw new IllegalArgumentException(
@@ -204,8 +297,19 @@ public class VigenereCipher extends CipherAlgorithm implements Serializable {
 
     @Override
     public void decipher(File file) {
+         try {
+            if (this.getKeyFromFileUTF8(file) != null) {
+                this.getCipheredTextFromFile(file);
+                this.decipherText(this.getKeyFromFileUTF8(file));
+            } else {
+                this.getCipheredTextFromFile(file);
+                this.decipherText();
+            }
+        } catch (IOException ex) {
+            Logger.getLogger(VigenereCipher.class.getName()).log(Level.SEVERE, null, ex);
+        }
 
-        try {
+        /*try {
             /* System.out.println(this.getKey() +", šifrovaný text: " +this.cipheredtext);
              try {
             
@@ -217,8 +321,10 @@ public class VigenereCipher extends CipherAlgorithm implements Serializable {
             
              } catch (IOException ex) {
              Logger.getLogger(VigenereCipher.class.getName()).log(Level.SEVERE, null, ex);
-             }*/
+             }
             Sifrovani.Helper.deserialize(file.getPath());
+        } catch (IOException ex) {
+            Logger.getLogger(VigenereCipher.class.getName()).log(Level.SEVERE, null, ex);
         } catch (Exception ex) {
             Logger.getLogger(VigenereCipher.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -233,37 +339,7 @@ public class VigenereCipher extends CipherAlgorithm implements Serializable {
             Logger.getLogger(VigenereCipher.class.getName()).log(Level.SEVERE, null, ex);
         }
         System.out.println(this.getKey() + ", šifrovaný text: " + this.cipheredtext);
-        this.decipherText();
+        this.decipherText();*/
     }
 
-    /*  public void serialize() throws Exception {
-     try {
-     // Serializace do souboru
-     ObjectOutput out = new ObjectOutputStream(
-     new FileOutputStream("vigenerecipher.dat"));
-     // jméno souboru
-     out.writeObject(this);
-     out.close();
-     } catch (IOException e) {
-     throw new Exception("Chyba při zápisu souboru : " + e);
-     }
-
-     }*/
-    /* public void deserialize() throws Exception {
-     VigenereCipher vciph;   
-     // Načtení ze souboru
-     try {
-     File file = new File("vigenerecipher.dat");
-     ObjectInputStream in = new ObjectInputStream(
-     new FileInputStream(file));
-     // Deserializace objektu
-     vciph = (VigenereCipher) in.readObject(); 
-        
-     in.close();
-   
-     } catch (IOException ex) {
-     Logger.getLogger(VigenereCipher.class.getName()).log(Level.SEVERE, null, ex);
-     }
-        
-     }*/
 }

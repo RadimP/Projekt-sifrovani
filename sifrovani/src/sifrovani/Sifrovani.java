@@ -70,12 +70,18 @@ public class Sifrovani {
     /**
      * @param args the command line arguments
      */
-    public static void main(String[] args) {
+    public static void main(String[] args) throws IOException {
         String s = "Žluťoučký kůň uháněl řeřichovým polem!";
-        VigenereCipher v = new VigenereCipher(s);
-        v.cipher(s, "pešimista");
+        VigenereCipher v = new VigenereCipher();
+        v.cipher(new File("vigenerecipher.txt"));
+        v.readFromFileUTF16(new File("vigenerecipher.txt")).chars().forEach(i->{System.out.print(i +", ");});
+        v.readFromFileUTF16(new File("vigenerecipher.txt")).chars().forEach(i->{System.out.print((char) i);});
+        v.decipher(new File("vigenereciphered.txt"));
+               System.out.println(v.cipheredtext);
+      System.out.println(v.getDecipheredText());
 
-        try {
+
+       /* try {
             Sifrovani.Helper.serialize(v, "vigenerecipher.dat");
         } catch (Exception ex) {
             Logger.getLogger(Sifrovani.class.getName()).log(Level.SEVERE, null, ex);
@@ -95,25 +101,11 @@ public class Sifrovani {
          } catch (Exception ex) {
          Logger.getLogger(Sifrovani.class.getName()).log(Level.SEVERE, null, ex);
          } */
-        v.decipher(new File("vigenerecipher.dat"));
-        System.out.println(v.getDecipheredText());
-        String value = "this is a test";
+       // v.decipher(new File("vigenerecipher.dat"));
+      //  System.out.println(v.getDecipheredText());
+       
 
-        String sha1 = "";
-
-        // With the java libraries
-        try {
-            MessageDigest digest = MessageDigest.getInstance("SHA-1");
-            digest.reset();
-            digest.update(value.getBytes("utf8"));
-            sha1 = String.format("%040x", new BigInteger(1, digest.digest()));
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-        System.out.println("The sha1 of \"" + value + "\" is:");
-        System.out.println(sha1);
-        System.out.println();
+       
     }
 
 }
