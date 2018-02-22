@@ -5,10 +5,18 @@
  */
 package sifrovani;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.InputStream;
 import java.io.Serializable;
 import java.math.BigInteger;
 import java.security.MessageDigest;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -29,7 +37,7 @@ public class SHA1 extends CipherAlgorithm implements Serializable {
     public void cipher(String string) {
         this.texttocipher = Sifrovani.Helper.adjustStringToLettersAndUpperCases(string);
 
-        // With the java libraries
+        
         try {
             MessageDigest digest = MessageDigest.getInstance("SHA-1");
             digest.reset();
@@ -41,10 +49,51 @@ public class SHA1 extends CipherAlgorithm implements Serializable {
 
         
     }
+    public void putDataIntoFile() throws Exception {        
+        File file = new File("sha1ciphered.txt");
+        FileWriter out = new FileWriter(file);
+        out.write(this.cipheredtext);
+        out.close();
+    }
 
     @Override
     public void cipher(File file) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        try {  
+            this.getTextToCipherFromFile(file); //načtení textu ze souboru
+        } catch (IOException ex) {
+            Logger.getLogger(SHA1.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        this.texttocipher = Sifrovani.Helper.adjustStringToLettersAndUpperCases(this.texttocipher); //převod textu na kapitálky a odstraněšní mezer, interounkce a diakritiky
+         try {
+            MessageDigest digest = MessageDigest.getInstance("SHA-1");
+            digest.reset();
+            digest.update(this.texttocipher.getBytes("utf8"));
+            this.cipheredtext = String.format("%040x", new BigInteger(1, digest.digest()));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        try {
+            this.putDataIntoFile();
+        } catch (Exception ex) {
+            Logger.getLogger(SHA1.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+    }
+    private String readFromFileCp1250(File file) throws FileNotFoundException, IOException {
+
+        ByteArrayOutputStream result = new ByteArrayOutputStream();
+        InputStream inputstream = new FileInputStream(file);
+        byte[] buffer = new byte[1024];
+        int length;
+        while ((length = inputstream.read(buffer)) != -1) {
+            result.write(buffer, 0, length);
+        }
+
+        return result.toString("Cp1250");
+    }
+    private void getTextToCipherFromFile(File file) throws IOException {
+                this.texttocipher = this.readFromFileCp1250(file);
+        
     }
 
     @Override

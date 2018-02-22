@@ -147,30 +147,20 @@ public class VigenereCipher extends CipherAlgorithm implements Serializable, Cip
         return this.key;
     }
 
-    public void putDataIntoFile() throws Exception {
-       /* try {
-            FileOutputStream fname = new FileOutputStream("vigenerecipher.dat");
-            DataOutputStream out = new DataOutputStream(fname);
-
-            out.writeUTF(key);
-            out.writeUTF(this.cipheredtext);
-            out.close();
-        } catch (IOException e) {
-            throw new Exception("Chyba při zápisu souboru : " + e);
-        }*/
- File file= new File("vigenereciphered.txt");   
- this.filename=file.getPath();
-FileWriter out = new FileWriter(file);
-out.write(this.cipheredtext);
-out.write("@" +this.key);
-out.close();
+    public void putDataIntoFile() throws Exception {        
+        File file = new File("vigenereciphered.txt");
+        this.filename = file.getPath();
+        FileWriter out = new FileWriter(file);
+        out.write(this.cipheredtext);
+        out.write("@" + this.key);
+        out.close();
     }
-    
+
     public String getFilename() {
-    return this.filename;
+        return this.filename;
     }
 
-    /*private*/ String readFromFileUTF16(File file) throws FileNotFoundException, IOException {
+    private String readFromFileCp1250(File file) throws FileNotFoundException, IOException {
 
         ByteArrayOutputStream result = new ByteArrayOutputStream();
         InputStream inputstream = new FileInputStream(file);
@@ -182,8 +172,8 @@ out.close();
 
         return result.toString("Cp1250");
     }
-    
- private String readFromFileUTF8(File file) throws FileNotFoundException, IOException {
+
+    private String readFromFileUTF8(File file) throws FileNotFoundException, IOException {
 
         ByteArrayOutputStream result = new ByteArrayOutputStream();
         InputStream inputstream = new FileInputStream(file);
@@ -195,28 +185,29 @@ out.close();
 
         return result.toString("UTF-8");
     }
- 
-    /*private*/ void getTextToCipherFromFile(File file) throws IOException {
-        String[] tmp = this.readFromFileUTF16(file).split("@");
+
+    private void getTextToCipherFromFile(File file) throws IOException {
+        String[] tmp = this.readFromFileCp1250(file).split("@");
         this.texttocipher = Sifrovani.Helper.adjustStringToLettersAndUpperCases(tmp[0]);
         System.out.println(tmp[0]);
     }
-    
+
     private void getCipheredTextFromFile(File file) throws IOException {
         String[] tmp = this.readFromFileUTF8(file).split("@");
         this.cipheredtext = Sifrovani.Helper.adjustStringToLettersAndUpperCases(tmp[0]);
-       System.out.println(tmp[0]);
+        System.out.println(tmp[0]);
     }
 
     private String getKeyFromFile(File file) throws IOException {
         String keyfromfile = "";
-        String[] tmp = this.readFromFileUTF16(file).split("@");
+        String[] tmp = this.readFromFileCp1250(file).split("@");
         if (tmp.length > 1) {
             keyfromfile = Sifrovani.Helper.adjustStringToLettersAndUpperCases(tmp[1]);
         }
         System.out.println(keyfromfile);
         return keyfromfile;
     }
+
     private String getKeyFromFileUTF8(File file) throws IOException {
         String keyfromfile = "";
         String[] tmp = this.readFromFileUTF8(file).split("@");
@@ -252,11 +243,11 @@ out.close();
         this.cipheredtext = string;
         decipherText();
     }
-    
+
     public void decipher(String string, String key) {
-     this.cipheredtext = string;
+        this.cipheredtext = string;
         decipherText(key);
-       
+
     }
 
     public String decipherText() {
@@ -274,11 +265,11 @@ out.close();
         }
         return decipheredtext = builder.toString();
     }
-    
+
     public String decipherText(String key) {
         StringBuilder builder = new StringBuilder();
         String s = this.cipheredtext;
-        this.key= key;
+        this.key = key;
         for (int i = 0; i < s.length(); i++) {
             if (s.charAt(i) < 65 || s.charAt(i) > 90) {
                 throw new IllegalArgumentException(
@@ -297,7 +288,7 @@ out.close();
 
     @Override
     public void decipher(File file) {
-         try {
+        try {
             if (this.getKeyFromFileUTF8(file) != null) {
                 this.getCipheredTextFromFile(file);
                 this.decipherText(this.getKeyFromFileUTF8(file));
@@ -309,37 +300,6 @@ out.close();
             Logger.getLogger(VigenereCipher.class.getName()).log(Level.SEVERE, null, ex);
         }
 
-        /*try {
-            /* System.out.println(this.getKey() +", šifrovaný text: " +this.cipheredtext);
-             try {
-            
-             DataInputStream in = new DataInputStream(
-             new FileInputStream(file));
-             key = in.readUTF();
-             cipheredtext = in.readUTF();
-             in.close();
-            
-             } catch (IOException ex) {
-             Logger.getLogger(VigenereCipher.class.getName()).log(Level.SEVERE, null, ex);
-             }
-            Sifrovani.Helper.deserialize(file.getPath());
-        } catch (IOException ex) {
-            Logger.getLogger(VigenereCipher.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (Exception ex) {
-            Logger.getLogger(VigenereCipher.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        try {
-            key = ((VigenereCipher) Sifrovani.Helper.deserialize(file.getPath())).getKey();
-        } catch (Exception ex) {
-            Logger.getLogger(VigenereCipher.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        try {
-            cipheredtext = ((VigenereCipher) Sifrovani.Helper.deserialize(file.getPath())).cipheredtext;
-        } catch (Exception ex) {
-            Logger.getLogger(VigenereCipher.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        System.out.println(this.getKey() + ", šifrovaný text: " + this.cipheredtext);
-        this.decipherText();*/
     }
 
 }

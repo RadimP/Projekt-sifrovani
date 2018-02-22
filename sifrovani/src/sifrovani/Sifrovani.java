@@ -72,37 +72,13 @@ public class Sifrovani {
      */
     public static void main(String[] args) throws IOException {
         String s = "Žluťoučký kůň uháněl řeřichovým polem!";
-        VigenereCipher v = new VigenereCipher();
-        v.cipher(new File("vigenerecipher.txt"));
-        v.readFromFileUTF16(new File("vigenerecipher.txt")).chars().forEach(i->{System.out.print(i +", ");});
-        v.readFromFileUTF16(new File("vigenerecipher.txt")).chars().forEach(i->{System.out.print((char) i);});
-        v.decipher(new File("vigenereciphered.txt"));
-               System.out.println(v.cipheredtext);
-      System.out.println(v.getDecipheredText());
+        SHA1 sha1 = new SHA1();
+        sha1.cipher(new File("sha1cipher.txt"));
+        System.out.println(sha1.texttocipher);
+        System.out.println(sha1.cipheredtext);
 
 
-       /* try {
-            Sifrovani.Helper.serialize(v, "vigenerecipher.dat");
-        } catch (Exception ex) {
-            Logger.getLogger(Sifrovani.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        /*  try {
-         Sifrovani.Helper.deserialize("vigenerecipher.dat");
-         } catch (Exception ex) {
-         Logger.getLogger(Sifrovani.class.getName()).log(Level.SEVERE, null, ex);
-         }*/
-        /*try {
-         /* try {
-         System.out.println(((VigenereCipher) Sifrovani.Helper.deserialize("vigenerecipher.dat")).cipheredtext);
-         } catch (Exception ex) {
-         Logger.getLogger(Sifrovani.class.getName()).log(Level.SEVERE, null, ex);
-         }*/
-        /*     v=((VigenereCipher) Sifrovani.Helper.deserialize("vigenerecipher.dat"));
-         } catch (Exception ex) {
-         Logger.getLogger(Sifrovani.class.getName()).log(Level.SEVERE, null, ex);
-         } */
-       // v.decipher(new File("vigenerecipher.dat"));
-      //  System.out.println(v.getDecipheredText());
+      
        
 
        
