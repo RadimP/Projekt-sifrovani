@@ -37,7 +37,6 @@ public class SHA1 extends CipherAlgorithm implements Serializable {
     public void cipher(String string) {
         this.texttocipher = Sifrovani.Helper.adjustStringToLettersAndUpperCases(string);
 
-        
         try {
             MessageDigest digest = MessageDigest.getInstance("SHA-1");
             digest.reset();
@@ -47,9 +46,9 @@ public class SHA1 extends CipherAlgorithm implements Serializable {
             e.printStackTrace();
         }
 
-        
     }
-    public void putDataIntoFile() throws Exception {        
+
+    public void putDataIntoFile() throws Exception {
         File file = new File("sha1ciphered.txt");
         FileWriter out = new FileWriter(file);
         out.write(this.cipheredtext);
@@ -58,13 +57,13 @@ public class SHA1 extends CipherAlgorithm implements Serializable {
 
     @Override
     public void cipher(File file) {
-        try {  
+        try {
             this.getTextToCipherFromFile(file); //načtení textu ze souboru
         } catch (IOException ex) {
             Logger.getLogger(SHA1.class.getName()).log(Level.SEVERE, null, ex);
         }
         this.texttocipher = Sifrovani.Helper.adjustStringToLettersAndUpperCases(this.texttocipher); //převod textu na kapitálky a odstraněšní mezer, interounkce a diakritiky
-         try {
+        try {
             MessageDigest digest = MessageDigest.getInstance("SHA-1");
             digest.reset();
             digest.update(this.texttocipher.getBytes("utf8"));
@@ -77,8 +76,9 @@ public class SHA1 extends CipherAlgorithm implements Serializable {
         } catch (Exception ex) {
             Logger.getLogger(SHA1.class.getName()).log(Level.SEVERE, null, ex);
         }
-        
+
     }
+
     private String readFromFileCp1250(File file) throws FileNotFoundException, IOException {
 
         ByteArrayOutputStream result = new ByteArrayOutputStream();
@@ -91,19 +91,20 @@ public class SHA1 extends CipherAlgorithm implements Serializable {
 
         return result.toString("Cp1250");
     }
+
     private void getTextToCipherFromFile(File file) throws IOException {
-                this.texttocipher = this.readFromFileCp1250(file);
-        
+        this.texttocipher = this.readFromFileCp1250(file);
+
     }
 
     @Override
     public void decipher(String string) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        throw new UnsupportedOperationException("This operation is not possible."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
     public void decipher(File file) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        throw new UnsupportedOperationException("This operation is not possible."); //To change body of generated methods, choose Tools | Templates.
     }
 
 }
