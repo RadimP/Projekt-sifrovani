@@ -11,7 +11,7 @@ import java.io.File;
  *
  * @author Student
  */
-public interface Cipher {
+public interface CipherAbstractParent {
 void cipher(String string);
 void cipher(File file);
 void decipher(String string);

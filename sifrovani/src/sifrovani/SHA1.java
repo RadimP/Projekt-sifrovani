@@ -30,7 +30,7 @@ public class SHA1 extends CipherAlgorithm implements Serializable {
     }
 
     public SHA1(String texttocipher) {
-        this.texttocipher = Sifrovani.Helper.adjustStringToLettersAndUpperCases(texttocipher);
+        this.texttocipher = texttocipher;
     }
 
     @Override

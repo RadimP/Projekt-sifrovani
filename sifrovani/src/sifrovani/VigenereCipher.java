@@ -31,7 +31,7 @@ import java.util.logging.Logger;
  *
  * @author RadimP
  */
-public class VigenereCipher extends CipherAlgorithm implements Serializable, Cipher {
+public class VigenereCipher extends CipherAlgorithm implements Serializable, CipherAbstractParent {
 
     private String key = "";
     private String decipheredtext;

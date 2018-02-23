@@ -12,7 +12,7 @@ import java.io.Serializable;
  *
  * @author Student
  */
-public abstract class CipherAlgorithm implements Cipher, Serializable {
+public abstract class CipherAlgorithm implements CipherAbstractParent, Serializable {
 
     protected String texttocipher;
 public String cipheredtext;
