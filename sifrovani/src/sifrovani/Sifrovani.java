@@ -72,10 +72,12 @@ public class Sifrovani {
      */
     public static void main(String[] args) throws IOException {
         String s = "Žluťoučký kůň uháněl řeřichovým polem!";
-        SHA1 sha1 = new SHA1();
-        sha1.cipher(new File("sha1cipher.txt"));
-        System.out.println(sha1.texttocipher);
-        System.out.println(sha1.cipheredtext);
+       // SHA1 sha1 = new SHA1();
+      //  sha1.cipher(new File("sha1cipher.txt"));
+      RSACipher rsa = new RSACipher();
+      rsa.cipher(s);
+        System.out.println(rsa.texttocipher);
+        System.out.println(rsa.cipheredtext);
 
 
       
