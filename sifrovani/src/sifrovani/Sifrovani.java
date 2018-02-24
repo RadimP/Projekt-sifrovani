@@ -76,10 +76,10 @@ public class Sifrovani {
       //  sha1.cipher(new File("sha1cipher.txt"));
       RSACipher rsa = new RSACipher();
       rsa.cipher(s);
+      rsa.decipher(rsa.cipheredtext);
         System.out.println(rsa.texttocipher);
         System.out.println(rsa.cipheredtext);
-
-
+System.out.println(rsa.getDecipheredText());
       
        
 
