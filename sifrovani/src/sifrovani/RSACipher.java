@@ -10,6 +10,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.ObjectInputStream;
@@ -31,9 +32,10 @@ import javax.crypto.NoSuchPaddingException;
  * @author RadimP
  */
 public class RSACipher extends CipherAlgorithm {
-public static final String PRIVATE_KEY_FILE = "private.key";
-public static final String PUBLIC_KEY_FILE = "public.key";
-private String decipheredtext;
+
+    public static final String PRIVATE_KEY_FILE = "private.key";
+    public static final String PUBLIC_KEY_FILE = "public.key";
+    private String decipheredtext;
     private KeyPair keypair;
     private PublicKey publicKey;
     private PrivateKey privateKey;
@@ -119,8 +121,8 @@ private String decipheredtext;
 
     private byte[] append(byte[] prefix, byte[] suffix) {
         byte[] toReturn = new byte[prefix.length + suffix.length];
-    System.arraycopy(prefix, 0, toReturn, 0, prefix.length);
-    System.arraycopy(suffix, 0, toReturn, prefix.length, suffix.length);
+        System.arraycopy(prefix, 0, toReturn, 0, prefix.length);
+        System.arraycopy(suffix, 0, toReturn, prefix.length, suffix.length);
         return toReturn;
     }
 
@@ -143,7 +145,7 @@ private String decipheredtext;
         try {
             publicKeyOS = new ObjectOutputStream(
                     new FileOutputStream(new File(PUBLIC_KEY_FILE)));
-            publicKeyOS.writeObject (this.publicKey);
+            publicKeyOS.writeObject(this.publicKey);
             publicKeyOS.close();
         } catch (IOException ex) {
             Logger.getLogger(RSACipher.class.getName()).log(Level.SEVERE, null, ex);
@@ -154,13 +156,14 @@ private String decipheredtext;
                 Logger.getLogger(RSACipher.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
-}
+    }
+
     public void saveprivateKey() {
-    ObjectOutputStream publicKeyOS = null;
+        ObjectOutputStream publicKeyOS = null;
         try {
             publicKeyOS = new ObjectOutputStream(
                     new FileOutputStream(new File(PRIVATE_KEY_FILE)));
-            publicKeyOS.writeObject (this.privateKey);
+            publicKeyOS.writeObject(this.privateKey);
             publicKeyOS.close();
         } catch (IOException ex) {
             Logger.getLogger(RSACipher.class.getName()).log(Level.SEVERE, null, ex);
@@ -170,66 +173,72 @@ private String decipheredtext;
             } catch (IOException ex) {
                 Logger.getLogger(RSACipher.class.getName()).log(Level.SEVERE, null, ex);
             }
-       }        
+        }
     }
-    
-/**
-   * Metoda ověří, zda byl vygenereován veřejný a soukormý klíč.
-   * 
-   * @return vrátí pravdivostní hodnotu true, pokud byl pár klíčů vygenerován.
-   */
-  public static boolean areKeysPresent() {
 
-    File privateKey = new File(PRIVATE_KEY_FILE);
-    File publicKey = new File(PUBLIC_KEY_FILE);
+    /**
+     * Metoda ověří, zda byl vygenereován veřejný a soukormý klíč.
+     *
+     * @return vrátí pravdivostní hodnotu true, pokud byl pár klíčů vygenerován.
+     */
+    public static boolean areKeysPresent() {
 
-    if (privateKey.exists() && publicKey.exists()) {
-      return true;
+        File privateKey = new File(PRIVATE_KEY_FILE);
+        File publicKey = new File(PUBLIC_KEY_FILE);
+
+        if (privateKey.exists() && publicKey.exists()) {
+            return true;
+        }
+        return false;
     }
-    return false;
-  }
-  
-  public void readPrivateKeyFromFile() throws IOException { ObjectInputStream inputStream = null;
-    try {
-       
-        inputStream = new ObjectInputStream(new FileInputStream(PRIVATE_KEY_FILE));
-        this.privateKey = (PrivateKey) inputStream.readObject();
-    } catch (FileNotFoundException ex) {
-        Logger.getLogger(RSACipher.class.getName()).log(Level.SEVERE, null, ex);
-    } catch (IOException | ClassNotFoundException ex) {
-        Logger.getLogger(RSACipher.class.getName()).log(Level.SEVERE, null, ex);
-    }finally {inputStream.close();}
+
+    public void readPrivateKeyFromFile() throws IOException {
+        ObjectInputStream inputStream = null;
+        try {
+
+            inputStream = new ObjectInputStream(new FileInputStream(PRIVATE_KEY_FILE));
+            this.privateKey = (PrivateKey) inputStream.readObject();
+        } catch (FileNotFoundException ex) {
+            Logger.getLogger(RSACipher.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (IOException | ClassNotFoundException ex) {
+            Logger.getLogger(RSACipher.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            inputStream.close();
+        }
     }
-  public void readPublicKeyFromFile() throws IOException {ObjectInputStream inputStream = null;
-    try {
-                inputStream = new ObjectInputStream(new FileInputStream(PUBLIC_KEY_FILE));
-        this.publicKey = (PublicKey) inputStream.readObject();
-        inputStream.close();
-    } catch (FileNotFoundException ex) {
-        Logger.getLogger(RSACipher.class.getName()).log(Level.SEVERE, null, ex);
-    } catch (IOException | ClassNotFoundException ex) {
-        Logger.getLogger(RSACipher.class.getName()).log(Level.SEVERE, null, ex);
-    } finally {inputStream.close();}
+
+    public void readPublicKeyFromFile() throws IOException {
+        ObjectInputStream inputStream = null;
+        try {
+            inputStream = new ObjectInputStream(new FileInputStream(PUBLIC_KEY_FILE));
+            this.publicKey = (PublicKey) inputStream.readObject();
+            inputStream.close();
+        } catch (FileNotFoundException ex) {
+            Logger.getLogger(RSACipher.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (IOException | ClassNotFoundException ex) {
+            Logger.getLogger(RSACipher.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            inputStream.close();
+        }
     }
-  
 
-public String decrypt(String encrypted) throws Exception{
-	this.RSAciph.init(Cipher.DECRYPT_MODE, this.privateKey);
-	byte[] bts = Hex.decodeHex(encrypted.toCharArray());
+    public String decrypt(String encrypted) throws Exception {
+        this.RSAciph.init(Cipher.DECRYPT_MODE, this.privateKey);
+        byte[] bts = Hex.decodeHex(encrypted.toCharArray());
 
-	byte[] decrypted = blockCipher(bts,Cipher.DECRYPT_MODE);
+        byte[] decrypted = blockCipher(bts, Cipher.DECRYPT_MODE);
 
-	return new String(decrypted,"UTF-8");
-}
-    
+        return new String(decrypted, "UTF-8");
+    }
+
     @Override
-        public void cipher(File file) {
-    try {
-        this.getTextToCipherFromFile(file);
-    } catch (IOException ex) {
-        Logger.getLogger(RSACipher.class.getName()).log(Level.SEVERE, null, ex);
-    }
-    this.generateKey();
+    public void cipher(File file) {
+        try {
+            this.getTextToCipherFromFile(file);
+        } catch (IOException ex) {
+            Logger.getLogger(RSACipher.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        this.generateKey();
         try {
             this.RSAciph = Cipher.getInstance("RSA");
         } catch (NoSuchAlgorithmException | NoSuchPaddingException ex) {
@@ -237,15 +246,22 @@ public String decrypt(String encrypted) throws Exception{
         }
         try {
             this.cipheredtext = this.encrypt(this.texttocipher);
+            this.putDataIntoFile();
         } catch (Exception ex) {
             Logger.getLogger(RSACipher.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-private void getTextToCipherFromFile(File file) throws IOException {
-        this.texttocipher = this.readFromFileCp1250(file);
 
+    private void getTextToCipherFromFile(File file) throws IOException {
+        this.texttocipher = this.readFromFileCp1250(file);
     }
- private String readFromFileCp1250(File file) throws FileNotFoundException, IOException {
+
+    private void getCipheredTextFromFile(File file) throws IOException {
+                this.cipheredtext = this.readFromFileUTF8(file);
+        // System.out.println(tmp[0]);
+    }
+
+    private String readFromFileCp1250(File file) throws FileNotFoundException, IOException {
 
         ByteArrayOutputStream result = new ByteArrayOutputStream();
         InputStream inputstream = new FileInputStream(file);
@@ -257,23 +273,59 @@ private void getTextToCipherFromFile(File file) throws IOException {
 
         return result.toString("Cp1250");
     }
- 
-    @Override
-        public void decipher(String string) {
-    try {
-        this.readPrivateKeyFromFile();
-        this.decipheredtext=this.decrypt(string);
-    } catch (Exception ex) {
-        Logger.getLogger(RSACipher.class.getName()).log(Level.SEVERE, null, ex);
-    }       
+
+    private String readFromFileUTF8(File file) throws FileNotFoundException, IOException {
+
+        ByteArrayOutputStream result = new ByteArrayOutputStream();
+        InputStream inputstream = new FileInputStream(file);
+        byte[] buffer = new byte[1024];
+        int length;
+        while ((length = inputstream.read(buffer)) != -1) {
+            result.write(buffer, 0, length);
+        }
+
+        return result.toString("UTF-8");
     }
-public String getDecipheredText() {
-return this.decipheredtext;
-}
+
+    public void putDataIntoFile() throws Exception {
+        File file = new File("RSAciphered.txt");
+        FileWriter out = new FileWriter(file);
+        out.write(this.cipheredtext);
+        out.close();
+    }
 
     @Override
-        public void decipher(File file) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public void decipher(String string) {
+        try {
+            this.readPrivateKeyFromFile();
+            this.decipheredtext = this.decrypt(string);
+        } catch (Exception ex) {
+            Logger.getLogger(RSACipher.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
-    
+
+    public String getDecipheredText() {
+        return this.decipheredtext;
+    }
+
+    @Override
+    public void decipher(File file) {
+try {
+            this.getCipheredTextFromFile(file);
+            this.readPrivateKeyFromFile();
+        } catch (IOException ex) {
+            Logger.getLogger(RSACipher.class.getName()).log(Level.SEVERE, null, ex);
+        }
+                try {
+            this.RSAciph = Cipher.getInstance("RSA");
+        } catch (NoSuchAlgorithmException | NoSuchPaddingException ex) {
+            Logger.getLogger(RSACipher.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        try {
+            this.decipheredtext = this.decrypt(this.cipheredtext);
+                    } catch (Exception ex) {
+            Logger.getLogger(RSACipher.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
 }

@@ -74,9 +74,9 @@ public class Sifrovani {
         String s = "Žluťoučký kůň neuháněl řeřichovým polem!";
        // SHA1 sha1 = new SHA1();
       //  sha1.cipher(new File("sha1cipher.txt"));
-      VigenereCipher rsa = new VigenereCipher();
-      rsa.cipher(new File("vigenerecipher.txt"));
-      rsa.decipher(rsa.cipheredtext);
+      RSACipher rsa = new RSACipher();
+      rsa.cipher(new File("RSAcipher.txt"));
+      rsa.decipher(new File("RSAciphered.txt"));
         System.out.println(rsa.texttocipher);
         System.out.println(rsa.cipheredtext);
 System.out.println(rsa.getDecipheredText());
