@@ -68,6 +68,7 @@ public class VigenereCipher extends CipherAlgorithm implements Serializable, Cip
         StringBuilder builder = new StringBuilder();
         String s = Sifrovani.Helper.adjustStringToLettersAndUpperCases(this.texttocipher);
         generateKey();
+      //  System.out.println(this.key);
         for (int i = 0; i < s.length(); i++) {
             if (s.charAt(i) < 65 || s.charAt(i) > 90) { //znak v ASCII
                 throw new IllegalArgumentException("Sifrovany retezec neobsahuje jen velka pismena");
@@ -189,13 +190,13 @@ public class VigenereCipher extends CipherAlgorithm implements Serializable, Cip
     private void getTextToCipherFromFile(File file) throws IOException {
         String[] tmp = this.readFromFileCp1250(file).split("@");
         this.texttocipher = Sifrovani.Helper.adjustStringToLettersAndUpperCases(tmp[0]);
-        System.out.println(tmp[0]);
+       // System.out.println(tmp[0]);
     }
 
     private void getCipheredTextFromFile(File file) throws IOException {
         String[] tmp = this.readFromFileUTF8(file).split("@");
         this.cipheredtext = Sifrovani.Helper.adjustStringToLettersAndUpperCases(tmp[0]);
-        System.out.println(tmp[0]);
+       // System.out.println(tmp[0]);
     }
 
     private String getKeyFromFile(File file) throws IOException {
@@ -204,7 +205,7 @@ public class VigenereCipher extends CipherAlgorithm implements Serializable, Cip
         if (tmp.length > 1) {
             keyfromfile = Sifrovani.Helper.adjustStringToLettersAndUpperCases(tmp[1]);
         }
-        System.out.println(keyfromfile);
+       // System.out.println(keyfromfile);
         return keyfromfile;
     }
 
@@ -214,7 +215,7 @@ public class VigenereCipher extends CipherAlgorithm implements Serializable, Cip
         if (tmp.length > 1) {
             keyfromfile = Sifrovani.Helper.adjustStringToLettersAndUpperCases(tmp[1]);
         }
-        System.out.println(keyfromfile);
+    //    System.out.println(keyfromfile);
         return keyfromfile;
     }
 
@@ -222,13 +223,14 @@ public class VigenereCipher extends CipherAlgorithm implements Serializable, Cip
     public void cipher(File file) {
 
         try {
-            if (this.getKeyFromFile(file) != null) {
+            if (this.getKeyFromFile(file) != "") {
                 this.getTextToCipherFromFile(file);
                 this.encipher(this.getKeyFromFile(file));
                 this.putDataIntoFile();
             } else {
                 this.getTextToCipherFromFile(file);
-                this.encipher();
+              //  System.out.println(this.texttocipher);
+                this.cipher(this.texttocipher);
                 this.putDataIntoFile();
             }
         } catch (IOException ex) {

@@ -71,11 +71,11 @@ public class Sifrovani {
      * @param args the command line arguments
      */
     public static void main(String[] args) throws IOException {
-        String s = "Žluťoučký kůň uháněl řeřichovým polem!";
+        String s = "Žluťoučký kůň neuháněl řeřichovým polem!";
        // SHA1 sha1 = new SHA1();
       //  sha1.cipher(new File("sha1cipher.txt"));
-      RSACipher rsa = new RSACipher();
-      rsa.cipher(s);
+      VigenereCipher rsa = new VigenereCipher();
+      rsa.cipher(new File("vigenerecipher.txt"));
       rsa.decipher(rsa.cipheredtext);
         System.out.println(rsa.texttocipher);
         System.out.println(rsa.cipheredtext);

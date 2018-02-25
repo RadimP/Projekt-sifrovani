@@ -5,11 +5,13 @@
  */
 package sifrovani;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.security.KeyPairGenerator;
@@ -117,12 +119,8 @@ private String decipheredtext;
 
     private byte[] append(byte[] prefix, byte[] suffix) {
         byte[] toReturn = new byte[prefix.length + suffix.length];
-        for (int i = 0; i < prefix.length; i++) {
-            toReturn[i] = prefix[i];
-        }
-        for (int i = 0; i < suffix.length; i++) {
-            toReturn[i + prefix.length] = suffix[i];
-        }
+    System.arraycopy(prefix, 0, toReturn, 0, prefix.length);
+    System.arraycopy(suffix, 0, toReturn, prefix.length, suffix.length);
         return toReturn;
     }
 
@@ -191,31 +189,27 @@ private String decipheredtext;
     return false;
   }
   
-  public void readPrivateKeyFromFile() {
+  public void readPrivateKeyFromFile() throws IOException { ObjectInputStream inputStream = null;
     try {
-        ObjectInputStream inputStream = null;
+       
         inputStream = new ObjectInputStream(new FileInputStream(PRIVATE_KEY_FILE));
         this.privateKey = (PrivateKey) inputStream.readObject();
     } catch (FileNotFoundException ex) {
         Logger.getLogger(RSACipher.class.getName()).log(Level.SEVERE, null, ex);
-    } catch (IOException ex) {
+    } catch (IOException | ClassNotFoundException ex) {
         Logger.getLogger(RSACipher.class.getName()).log(Level.SEVERE, null, ex);
-    } catch (ClassNotFoundException ex) {
-        Logger.getLogger(RSACipher.class.getName()).log(Level.SEVERE, null, ex);
+    }finally {inputStream.close();}
     }
-    }
-  public void readPublicKeyFromFile() {
+  public void readPublicKeyFromFile() throws IOException {ObjectInputStream inputStream = null;
     try {
-        ObjectInputStream inputStream = null;
-        inputStream = new ObjectInputStream(new FileInputStream(PUBLIC_KEY_FILE));
+                inputStream = new ObjectInputStream(new FileInputStream(PUBLIC_KEY_FILE));
         this.publicKey = (PublicKey) inputStream.readObject();
+        inputStream.close();
     } catch (FileNotFoundException ex) {
         Logger.getLogger(RSACipher.class.getName()).log(Level.SEVERE, null, ex);
-    } catch (IOException ex) {
+    } catch (IOException | ClassNotFoundException ex) {
         Logger.getLogger(RSACipher.class.getName()).log(Level.SEVERE, null, ex);
-    } catch (ClassNotFoundException ex) {
-        Logger.getLogger(RSACipher.class.getName()).log(Level.SEVERE, null, ex);
-    }
+    } finally {inputStream.close();}
     }
   
 
@@ -230,9 +224,40 @@ public String decrypt(String encrypted) throws Exception{
     
     @Override
         public void cipher(File file) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    try {
+        this.getTextToCipherFromFile(file);
+    } catch (IOException ex) {
+        Logger.getLogger(RSACipher.class.getName()).log(Level.SEVERE, null, ex);
     }
+    this.generateKey();
+        try {
+            this.RSAciph = Cipher.getInstance("RSA");
+        } catch (NoSuchAlgorithmException | NoSuchPaddingException ex) {
+            Logger.getLogger(RSACipher.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        try {
+            this.cipheredtext = this.encrypt(this.texttocipher);
+        } catch (Exception ex) {
+            Logger.getLogger(RSACipher.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+private void getTextToCipherFromFile(File file) throws IOException {
+        this.texttocipher = this.readFromFileCp1250(file);
 
+    }
+ private String readFromFileCp1250(File file) throws FileNotFoundException, IOException {
+
+        ByteArrayOutputStream result = new ByteArrayOutputStream();
+        InputStream inputstream = new FileInputStream(file);
+        byte[] buffer = new byte[1024];
+        int length;
+        while ((length = inputstream.read(buffer)) != -1) {
+            result.write(buffer, 0, length);
+        }
+
+        return result.toString("Cp1250");
+    }
+ 
     @Override
         public void decipher(String string) {
     try {
