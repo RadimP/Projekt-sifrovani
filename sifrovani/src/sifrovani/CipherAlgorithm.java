@@ -15,8 +15,8 @@ import java.io.Serializable;
 public abstract class CipherAlgorithm implements CipherInterface, Serializable {
 
     protected String texttocipher;
-    public String cipheredtext;
-    public String decipheredtext;
+    protected String cipheredtext;
+    protected String decipheredtext;
 
     public CipherAlgorithm() {
     }

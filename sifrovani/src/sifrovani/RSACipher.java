@@ -36,7 +36,6 @@ public class RSACipher extends CipherAlgorithm implements Serializable, CipherIn
 
     public static final String PRIVATE_KEY_FILE = "c:\\Users\\RadimP\\Documents\\NetBeansProjects\\Projekt-sifrovani\\sifrovani\\private.key";
     public static final String PUBLIC_KEY_FILE = "c:\\Users\\RadimP\\Documents\\NetBeansProjects\\Projekt-sifrovani\\sifrovani\\public.key";
-    public String decipheredtext;
     private KeyPair keypair;
     private PublicKey publicKey;
     private PrivateKey privateKey;

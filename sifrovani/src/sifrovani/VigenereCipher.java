@@ -24,7 +24,7 @@ import java.util.logging.Logger;
 public class VigenereCipher extends CipherAlgorithm implements Serializable, CipherInterface {
 
     private String key = "";
-    private String decipheredtext;
+   
     
 
     public VigenereCipher() {

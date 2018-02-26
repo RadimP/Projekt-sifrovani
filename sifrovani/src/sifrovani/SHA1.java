@@ -24,7 +24,7 @@ import java.util.logging.Logger;
  */
 public class SHA1 extends CipherAlgorithm implements Serializable, CipherInterface {
 
-    private String decipheredtext;
+    
 
     public SHA1() {
     }

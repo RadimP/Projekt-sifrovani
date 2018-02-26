@@ -19,44 +19,43 @@ public class InputAndProcessing {
     SHA1 sha1;
     RSACipher rsa;
     String[] args;
-    String classname;
     /* static final String[] THECIPHER = {
         "enigma", "caesar", "vigenere", "sha1", "rsa", "-h"
     };*/
     static final String NAPOVEDA = "Jako první parametr zadejte druh šifry: enigma, caesar, vigenere, sha1, rsa.\nJako druhý parametr zadejte, zda chcete šifrovat nebo dešiftovat: cipher, decipher.\nJako třetí parametr zadejte, zda chcete dešifrovat ze souboru, nebo zadat text: file, text.\nJako čtvrtý parametr zadejte cestu k souboru nebo text. Je-li text víceslovný napište ho do dvojitých uvozovek.\n ";
-
+/**
+ * Konstruktor bez vtsupních parametrů, který voláním jenodltivých metod této třídy zpracovává vstup.
+ */
     InputAndProcessing() {
         this.getInputFromCmdline();
     }
-
+/**
+ * Tato metoda zpracuje arg[0] z příkazového řádku (rozliší druh šifry) a pak pomocí metody processCMdArg3(CipherAlgorithm ca)
+ * zpracuje ostatní argumenty příkazového řádku a vytiskne výsledek (šifrovaný nebo dešifrovaný text).
+ */
     public void getInputFromCmdline() {
         this.args = Sifrovani.getArgs();
         if (this.args.length >= 4) {
             switch (args[0].toLowerCase()) {
                 case "enigma":
                     enigma = new Enigma();
-                    this.classname="Enigma";
                     processCMdArg3(this.enigma);
                     break;
                 case "caesar":
                     caesar = new CaesarCipher();
-                    this.classname= "CaesarCipher";
                     processCMdArg3(this.caesar);
                     break;
                 case "vigenere":
                     vigenere = new VigenereCipher();
-                    this.classname = "VigenereCipher";
                     processCMdArg3(this.vigenere);
                     break;
                 case "sha1":
                     sha1 = new SHA1();
                     processCMdArg3(this.sha1);
-                    this.classname="SHA1";
                     break;
                 case "rsa":
                     rsa = new RSACipher();
                     processCMdArg3(this.rsa);
-                    this.classname="RSACipher";
                     break;
                 case "-h":
                     System.out.println(NAPOVEDA);
@@ -73,35 +72,40 @@ public class InputAndProcessing {
             }
         }
     }
-
+/**
+ * Tato metoda  na základě konkrétní třídy třídy načtené metodou getInputFromCmdline() zpracuje ostatní argumenty příkazového řádku a vytiskně výsledek 
+ * nebo nápovědu nebo oznámí, že zadané argumenty nelze zpracovat.
+ * @param ca instance zadané třídy šifry (CaesarCipher,VigenerCipher, Enigma, SHA1 nebo RSACipher)  převzatá z metody getInputFromCmdline(). 
+ * Přestože je jako vstupní třída definována rodičovská třída CipherAlgorithm, metoda vnitřně pracuje s některým potomkem.
+ */
     public void processCMdArg3(CipherAlgorithm ca) {
         this.args = Sifrovani.getArgs();
         if (this.args.length >= 4) {
             switch (args[2].toLowerCase()) {
                 case "file":
                     if ("cipher".equals(args[1].toLowerCase())) {
-                       ca.cipher(new File(args[3]));
+                        ca.cipher(new File(args[3]));
                         System.out.println(ca.cipheredtext);
-                    }
-                    if ("decipher".equals(args[1].toLowerCase())) {
+                    } else if ("decipher".equals(args[1].toLowerCase())) {
                         ca.decipher(new File(args[3]));
                         System.out.println(ca.decipheredtext);
-                    }
-                    if ("-h".equals(args[1].toLowerCase())) {
+                    } else if ("-h".equals(args[1].toLowerCase())) {
                         System.out.println(NAPOVEDA);
+                    } else {
+                        System.out.println("Not the supported operation!");
                     }
                     break;
                 case "text":
                     if ("cipher".equals(args[1].toLowerCase())) {
                         ca.cipher(args[3]);
                         System.out.println(ca.cipheredtext);
-                    }
-                    if ("decipher".equals(args[1].toLowerCase())) {
+                    } else if ("decipher".equals(args[1].toLowerCase())) {
                         ca.decipher(args[3]);
                         System.out.println(ca.decipheredtext);
-                    }
-                    if ("-h".equals(args[1].toLowerCase())) {
+                    } else if ("-h".equals(args[1].toLowerCase())) {
                         System.out.println(NAPOVEDA);
+                    } else {
+                        System.out.println("Not the supported operation!");
                     }
                     break;
                 case "-h":
