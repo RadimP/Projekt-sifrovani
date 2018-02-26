@@ -15,6 +15,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.io.Serializable;
 import java.security.KeyPairGenerator;
 import java.security.KeyPair;
 import java.security.NoSuchAlgorithmException;
@@ -31,11 +32,11 @@ import javax.crypto.NoSuchPaddingException;
  *
  * @author RadimP
  */
-public class RSACipher extends CipherAlgorithm {
+public class RSACipher extends CipherAlgorithm implements Serializable, CipherInterface {
 
-    public static final String PRIVATE_KEY_FILE = "private.key";
-    public static final String PUBLIC_KEY_FILE = "public.key";
-    private String decipheredtext;
+    public static final String PRIVATE_KEY_FILE = "c:\\Users\\RadimP\\Documents\\NetBeansProjects\\Projekt-sifrovani\\sifrovani\\private.key";
+    public static final String PUBLIC_KEY_FILE = "c:\\Users\\RadimP\\Documents\\NetBeansProjects\\Projekt-sifrovani\\sifrovani\\public.key";
+    public String decipheredtext;
     private KeyPair keypair;
     private PublicKey publicKey;
     private PrivateKey privateKey;
@@ -288,7 +289,7 @@ public class RSACipher extends CipherAlgorithm {
     }
 
     public void putDataIntoFile() throws Exception {
-        File file = new File("RSAciphered.txt");
+        File file = new File("c:\\Users\\RadimP\\Documents\\NetBeansProjects\\Projekt-sifrovani\\sifrovani\\RSAciphered.txt");
         FileWriter out = new FileWriter(file);
         out.write(this.cipheredtext);
         out.close();
@@ -312,6 +313,7 @@ public class RSACipher extends CipherAlgorithm {
     public void decipher(File file) {
 try {
             this.getCipheredTextFromFile(file);
+            System.out.println(this.cipheredtext);
             this.readPrivateKeyFromFile();
         } catch (IOException ex) {
             Logger.getLogger(RSACipher.class.getName()).log(Level.SEVERE, null, ex);
@@ -323,6 +325,7 @@ try {
         }
         try {
             this.decipheredtext = this.decrypt(this.cipheredtext);
+            System.out.println(this.decipheredtext);
                     } catch (Exception ex) {
             Logger.getLogger(RSACipher.class.getName()).log(Level.SEVERE, null, ex);
         }

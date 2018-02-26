@@ -21,11 +21,11 @@ import java.util.logging.Logger;
  *
  * @author RadimP
  */
-public class VigenereCipher extends CipherAlgorithm implements Serializable, CipherAbstractParent {
+public class VigenereCipher extends CipherAlgorithm implements Serializable, CipherInterface {
 
     private String key = "";
     private String decipheredtext;
-    private String filename;
+    
 
     public VigenereCipher() {
     }
@@ -139,17 +139,14 @@ public class VigenereCipher extends CipherAlgorithm implements Serializable, Cip
     }
 
     public void putDataIntoFile() throws Exception {        
-        File file = new File("vigenereciphered.txt");
-        this.filename = file.getPath();
+        File file = new File("vigenereciphered.txt");        
         FileWriter out = new FileWriter(file);
         out.write(this.cipheredtext);
         out.write("@" + this.key);
         out.close();
     }
 
-    public String getFilename() {
-        return this.filename;
-    }
+    
 
     private String readFromFileCp1250(File file) throws FileNotFoundException, IOException {
 

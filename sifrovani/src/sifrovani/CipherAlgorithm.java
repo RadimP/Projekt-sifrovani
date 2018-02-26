@@ -12,10 +12,12 @@ import java.io.Serializable;
  *
  * @author Student
  */
-public abstract class CipherAlgorithm implements CipherAbstractParent, Serializable {
+public abstract class CipherAlgorithm implements CipherInterface, Serializable {
 
     protected String texttocipher;
-public String cipheredtext;
+    public String cipheredtext;
+    public String decipheredtext;
+
     public CipherAlgorithm() {
     }
 
@@ -24,7 +26,6 @@ public String cipheredtext;
 
     }
 
-
     @Override
     public abstract void cipher(String string);
 
@@ -32,8 +33,10 @@ public String cipheredtext;
     public abstract void cipher(File file);
 
     @Override
-    public abstract void decipher(String string); 
+    public abstract void decipher(String string);
 
     @Override
-    public abstract void decipher(File file); 
+    public abstract void decipher(File file);
+    
+    
 }

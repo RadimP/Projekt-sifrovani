@@ -5,10 +5,33 @@
  */
 package sifrovani;
 
+import java.io.File;
+import java.io.Serializable;
+
 /**
  *
  * @author RadimP
  */
-public class Enigma {
+public class Enigma extends CipherAlgorithm implements Serializable, CipherInterface {
+
+    @Override
+    public void cipher(String string) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public void cipher(File file) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public void decipher(String string) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public void decipher(File file) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
     
 }

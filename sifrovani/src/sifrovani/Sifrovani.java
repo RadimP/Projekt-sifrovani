@@ -66,12 +66,19 @@ public class Sifrovani {
 
         }
     }
+    private static String[] savedArgs;
+    public static String[] getArgs() {
+        return savedArgs;
+    }
 
     /**
      * @param args the command line arguments
      */
     public static void main(String[] args) throws IOException {
-        String s = "Žluťoučký kůň neuháněl řeřichovým polem!";
+                savedArgs = args;
+        InputAndProcessing iap = new InputAndProcessing();        
+                
+      /*  String s = "Žluťoučký kůň neuháněl řeřichovým polem!";
        // SHA1 sha1 = new SHA1();
       //  sha1.cipher(new File("sha1cipher.txt"));
       RSACipher rsa = new RSACipher();
@@ -79,7 +86,7 @@ public class Sifrovani {
       rsa.decipher(new File("RSAciphered.txt"));
         System.out.println(rsa.texttocipher);
         System.out.println(rsa.cipheredtext);
-System.out.println(rsa.getDecipheredText());
+System.out.println(rsa.getDecipheredText());*/
       
        
 
