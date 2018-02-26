@@ -258,8 +258,7 @@ public class RSACipher extends CipherAlgorithm implements Serializable, CipherIn
 
     private void getCipheredTextFromFile(File file) throws IOException {
                 this.cipheredtext = this.readFromFileUTF8(file);
-        // System.out.println(tmp[0]);
-    }
+           }
 
     private String readFromFileCp1250(File file) throws FileNotFoundException, IOException {
 
@@ -312,7 +311,7 @@ public class RSACipher extends CipherAlgorithm implements Serializable, CipherIn
     public void decipher(File file) {
 try {
             this.getCipheredTextFromFile(file);
-            System.out.println(this.cipheredtext);
+           // System.out.println(this.cipheredtext);
             this.readPrivateKeyFromFile();
         } catch (IOException ex) {
             Logger.getLogger(RSACipher.class.getName()).log(Level.SEVERE, null, ex);
@@ -324,7 +323,7 @@ try {
         }
         try {
             this.decipheredtext = this.decrypt(this.cipheredtext);
-            System.out.println(this.decipheredtext);
+          //  System.out.println(this.decipheredtext);
                     } catch (Exception ex) {
             Logger.getLogger(RSACipher.class.getName()).log(Level.SEVERE, null, ex);
         }
