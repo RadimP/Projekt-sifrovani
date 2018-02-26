@@ -27,6 +27,7 @@ public class CaesarCipher extends CipherAlgorithm {
      * @author zdenek
      * @param textToCipher text for coding
      */
+    public CaesarCipher() {}
     public CaesarCipher(String textToCipher) {
 
         this.texttocipher = textToCipher;
