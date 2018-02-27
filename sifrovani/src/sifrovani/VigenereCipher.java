@@ -22,7 +22,6 @@ import java.util.logging.Logger;
  * @author RadimP
  */
 public class VigenereCipher extends CipherAlgorithm implements Serializable, CipherInterface {
-
     private String key = "";
    
     

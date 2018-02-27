@@ -14,6 +14,7 @@ import java.io.ObjectOutput;
 import java.io.ObjectOutputStream;
 import java.math.BigInteger;
 import java.security.MessageDigest;
+import java.util.logging.FileHandler;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -66,6 +67,7 @@ public class Sifrovani {
 
         }
     }
+    private static final Logger LOG = Logger.getLogger(Sifrovani.class.getName());
     private static String[] savedArgs;
     public static String[] getArgs() {
         return savedArgs;
@@ -75,18 +77,25 @@ public class Sifrovani {
      * @param args the command line arguments
      */
     public static void main(String[] args) throws IOException {
+        LOG.addHandler(new FileHandler("Log.lgo"));
+        LOG.setLevel(Level.SEVERE);
                 savedArgs = args;
-        InputAndProcessing iap = new InputAndProcessing();        
+       // InputAndProcessing iap = new InputAndProcessing();        
                 
-      /*  String s = "Žluťoučký kůň neuháněl řeřichovým polem!";
+        String s = "Žluťoučký kůň neuháněl řeřichovým polem!";
        // SHA1 sha1 = new SHA1();
       //  sha1.cipher(new File("sha1cipher.txt"));
       RSACipher rsa = new RSACipher();
       rsa.cipher(new File("RSAcipher.txt"));
       rsa.decipher(new File("RSAciphered.txt"));
+        try {
+            Sifrovani.Helper.serialize(rsa, "rsacipher.dat");
+        } catch (Exception ex) {
+            Logger.getLogger(Sifrovani.class.getName()).log(Level.SEVERE, null, ex);
+        }
         System.out.println(rsa.texttocipher);
         System.out.println(rsa.cipheredtext);
-System.out.println(rsa.getDecipheredText());*/
+System.out.println(rsa.getDecipheredText());
       
        
 
